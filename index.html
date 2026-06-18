@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentRadar — Equal Experts India</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f3ef;color:#1a1a18;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e0dfd7;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.ee-icon{width:36px;height:36px;flex-shrink:0}
+.ee-wordmark{display:flex;flex-direction:column;line-height:1.1}
+.ee-wordmark span{font-size:12px;font-weight:700;color:#3d3d3d;letter-spacing:0.04em}
+.ee-divider{width:1px;height:28px;background:#ddd;margin:0 12px}
+.tr-name{font-size:15px;font-weight:600;color:#1a1a18}
+.tr-name span{color:#1BAEE1}
+.ee-badge{font-size:11px;background:#f0ede6;color:#888;padding:3px 8px;border-radius:20px;margin-left:8px}
+.user-pill{display:flex;align-items:center;gap:8px;background:#E6F7FC;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer;border:none}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:#1BAEE1;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.user-name{font-size:12px;font-weight:500;color:#0e8ab5}
+.token-bar{background:#FAEEDA;border-bottom:1px solid #FAC775;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.token-bar input{flex:1;min-width:200px;max-width:400px;padding:7px 12px;border:1px solid #FAC775;border-radius:6px;font-size:13px;font-family:monospace;background:#fff}
+.btn-primary{padding:7px 16px;background:#1BAEE1;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
+.btn-primary:hover{background:#0e8ab5}
+.token-link{font-size:12px;color:#633806}
+.token-link a{color:#633806;font-weight:500}
+.token-status{font-size:12px;color:#085041;font-weight:500}
+#role-screen{padding:32px 24px}
+.screen-title{font-size:22px;font-weight:600;margin-bottom:6px}
+.screen-sub{font-size:14px;color:#888;margin-bottom:24px}
+.role-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.role-tile{background:#fff;border:1.5px solid #e0dfd7;border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.role-tile:hover{border-color:#1BAEE1;box-shadow:0 2px 8px rgba(27,174,225,.15)}
+.role-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
+.role-label{font-size:14px;font-weight:600;color:#1a1a18;margin-bottom:3px}
+.role-owner{font-size:12px;color:#888;margin-bottom:8px}
+.role-pills{display:flex;flex-wrap:wrap;gap:4px}
+.role-pill{font-size:10px;padding:2px 7px;border-radius:20px;background:#f0ede6;color:#555}
+#dashboard{display:none}
+.dash-header{background:#fff;border-bottom:1px solid #e0dfd7;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.dash-role-badge{display:flex;align-items:center;gap:10px}
+.dash-role-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.dash-label{font-size:15px;font-weight:600}
+.dash-sub{font-size:12px;color:#888}
+.back-btn{font-size:12px;color:#1BAEE1;background:none;border:1px solid #7dd4ee;border-radius:6px;padding:5px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.controls{padding:12px 24px;background:#f8f7f3;border-bottom:1px solid #e0dfd7;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
+.search-wrap input{width:100%;padding:7px 12px 7px 32px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#aaa;font-size:14px}
+.city-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #ddd;background:#fff;color:#555;cursor:pointer}
+.city-btn.active{background:#1BAEE1;border-color:#1BAEE1;color:#fff}
+.sort-select{font-size:12px;padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer}
+.stats-bar{display:flex;background:#fff;border-bottom:1px solid #e0dfd7}
+.stat-item{flex:1;padding:12px 20px;border-right:1px solid #e0dfd7}
+.stat-item:last-child{border-right:none}
+.stat-val{font-size:20px;font-weight:600}
+.stat-lbl{font-size:11px;color:#888;margin-top:1px}
+.results-area{padding:20px 24px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.dev-card{background:#fff;border:1px solid #e0dfd7;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:0}
+.dev-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.dev-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.dev-name{font-size:14px;font-weight:600;color:#1a1a18}
+.dev-handle{font-size:12px;color:#1BAEE1}
+.dev-activity{font-size:11px;margin-top:2px}
+.active-recent{color:#0F6E56}
+.active-mid{color:#BA7517}
+.active-old{color:#aaa}
+.dev-loc{font-size:11px;color:#888;display:flex;align-items:center;gap:3px;margin-bottom:7px}
+.dev-bio{font-size:12px;color:#555;line-height:1.5;margin-bottom:8px;min-height:34px}
+.dev-skills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.skill-must{font-size:10px;padding:2px 7px;border-radius:10px;background:#1a1a18;color:#f8f7f3}
+.skill-good{font-size:10px;padding:2px 7px;border-radius:10px;background:#f0ede6;color:#444;border:1px solid #ddd}
+.dev-stats{display:flex;gap:10px;padding:7px 0;border-top:1px solid #f0ede6;border-bottom:1px solid #f0ede6;margin-bottom:8px}
+.dev-stat{display:flex;align-items:center;gap:4px;font-size:11px;color:#666}
+.score-row{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.score-bar-bg{flex:1;height:4px;background:#f0ede6;border-radius:2px}
+.score-bar-fill{height:4px;border-radius:2px;background:#1BAEE1}
+.score-num{font-size:12px;font-weight:600;color:#1BAEE1;min-width:26px;text-align:right}
+.score-lbl{font-size:10px;color:#aaa}
+.dev-actions{display:flex;gap:8px}
+.btn-github{flex:1;font-size:12px;padding:7px;border:1px solid #ddd;border-radius:7px;background:#fff;color:#1a1a18;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none}
+.btn-github:hover{background:#f8f7f3}
+.btn-save{font-size:12px;padding:7px 10px;border:1px solid #7dd4ee;border-radius:7px;background:#E6F7FC;color:#0e8ab5;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-save.saved{background:#E1F5EE;border-color:#5DCAA5;color:#085041}
+.digest-bar{background:#fff;border-top:1px solid #e0dfd7;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.digest-info{font-size:13px;color:#555}
+.btn-digest{display:flex;align-items:center;gap:6px;padding:8px 16px;background:#1BAEE1;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer}
+.btn-digest:hover{background:#0e8ab5}
+.btn-secondary{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;color:#1BAEE1;border:1px solid #7dd4ee;border-radius:8px;font-size:13px;cursor:pointer}
+.loading-wrap{text-align:center;padding:60px 20px;color:#aaa}
+.loading-spinner{width:32px;height:32px;border:3px solid #f0ede6;border-top-color:#1BAEE1;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-state i{font-size:40px;color:#ddd;display:block;margin-bottom:12px}
+.empty-state p{font-size:14px;color:#888}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-wrap">
+    <svg class="ee-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="34" height="34" rx="3" fill="none" stroke="#1BAEE1" stroke-width="3.5"/>
+      <rect x="6" y="7" width="6" height="3.5" rx="1" fill="#1BAEE1"/>
+      <rect x="6" y="25.5" width="6" height="3.5" rx="1" fill="#1BAEE1"/>
+      <rect x="6" y="7" width="3.5" height="22" rx="1" fill="#1BAEE1"/>
+      <rect x="24" y="7" width="6" height="3.5" rx="1" fill="#1BAEE1"/>
+      <rect x="24" y="25.5" width="6" height="3.5" rx="1" fill="#1BAEE1"/>
+      <rect x="26.5" y="7" width="3.5" height="22" rx="1" fill="#1BAEE1"/>
+      <rect x="11" y="14" width="14" height="3" rx="1" fill="#1BAEE1"/>
+      <rect x="11" y="19.5" width="14" height="3" rx="1" fill="#1BAEE1"/>
+    </svg>
+    <div class="ee-wordmark"><span>EQUAL</span><span>EXPERTS</span></div>
+    <div class="ee-divider"></div>
+    <span class="tr-name">Talent<span>Radar</span></span>
+    <span class="ee-badge">Equal Experts India</span>
+  </div>
+  <button class="user-pill" onclick="backToRoles()" id="user-pill" style="display:none">
+    <div class="user-avatar" id="user-avatar-top">VK</div>
+    <span class="user-name" id="user-name-top">Vijay Kumar</span>
+  </button>
+</div>
+
+<div class="token-bar" id="token-bar">
+  <i class="ti ti-key" style="font-size:18px;color:#633806"></i>
+  <span style="font-size:13px;color:#633806;font-weight:500">GitHub token needed:</span>
+  <input type="password" id="token-input" placeholder="Paste your ghp_xxxxxxxxxx token here">
+  <button class="btn-primary" onclick="saveToken()">Save &amp; Search</button>
+  <span class="token-link"><a href="https://github.com/settings/tokens/new?scopes=read:user,user:email&description=EE-TalentRadar" target="_blank">Get a free token ↗</a></span>
+  <span class="token-status" id="token-status"></span>
+</div>
+
+<div id="role-screen">
+  <div class="screen-title">TalentRadar — Equal Experts India</div>
+  <div class="screen-sub">Welcome, Vijay Kumar. Select a hiring domain to view your talent pool.</div>
+  <div class="role-grid" id="role-grid"></div>
+</div>
+
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-role-badge">
+      <div class="dash-role-icon" id="dash-icon"></div>
+      <div>
+        <div class="dash-label" id="dash-label"></div>
+        <div class="dash-sub" id="dash-sub"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="back-btn" onclick="backToRoles()"><i class="ti ti-arrow-left"></i> All domains</button>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon"></i>
+      <input type="text" id="search-input" placeholder="Search name, skill, bio..." oninput="applyFilters()">
+    </div>
+    <div id="city-filter"></div>
+    <select class="sort-select" id="sort-select" onchange="sortAndRender()">
+      <option value="score">Sort: Top score</option>
+      <option value="stars">Sort: Most stars</option>
+      <option value="active">Sort: Most active</option>
+      <option value="followers">Sort: Most followed</option>
+    </select>
+    <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="runSearch()">
+      <i class="ti ti-refresh" style="font-size:13px"></i> Refresh
+    </button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">profiles found</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-active">—</div><div class="stat-lbl">active last 30 days</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-top">—</div><div class="stat-lbl">score ≥ 70</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-cities">—</div><div class="stat-lbl">cities represented</div></div>
+  </div>
+  <div class="results-area"><div id="results-container"></div></div>
+  <div class="digest-bar">
+    <div class="digest-info">Weekly digest — top <strong>10</strong> profiles emailed to <strong id="digest-email"></strong></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" onclick="previewDigest()"><i class="ti ti-eye"></i> Preview</button>
+      <button class="btn-digest" onclick="sendDigest()"><i class="ti ti-send"></i> Send digest now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────
+var RECRUITERS = [
+  {id:"devops",   label:"DevOps & Platform",    name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#E1F5EE", tcolor:"#085041", icon:"ti-server"},
+  {id:"mobile",   label:"Android & iOS Mobile", name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#EEEDFE", tcolor:"#3C3489", icon:"ti-device-mobile"},
+  {id:"backend",  label:"Backend Developers",   name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#FAEEDA", tcolor:"#633806", icon:"ti-api"},
+  {id:"frontend", label:"Frontend Developers",  name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#E6F1FB", tcolor:"#0C447C", icon:"ti-layout"},
+  {id:"qa",       label:"QA & SDET",            name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#FAECE7", tcolor:"#712B13", icon:"ti-bug"},
+  {id:"data",     label:"Data Engineers",       name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#EAF3DE", tcolor:"#27500A", icon:"ti-chart-bar"},
+  {id:"genai",    label:"GenAI & ML Engineers", name:"Vijay Kumar", email:"vijay.kumar@equalexperts.com", color:"#F1EFE8", tcolor:"#26215C", icon:"ti-brain"}
+];
+
+var ROLES = {
+  devops:   { must:["kubernetes","terraform","ci/cd","cicd","devops engineer","sre","platform engineer","site reliability","devsecops"], good:["docker","helm","argocd","ansible","prometheus","aws","gcp","azure","python","golang","java","nodejs","grafana","github actions"] },
+  mobile:   { must:["android","kotlin","swift","ios","flutter","react native"], good:["jetpack compose","swiftui","coroutines","dart","xcode"] },
+  backend:  { must:["java","golang","nodejs","python","microservices","backend","spring boot","node.js"], good:["kafka","grpc","postgresql","redis","distributed systems","rust","scala"] },
+  frontend: { must:["react","typescript","vue","nextjs","next.js","javascript","frontend"], good:["tailwind","graphql","storybook","svelte","angular","vite"] },
+  qa:       { must:["playwright","selenium","cypress","test automation","sdet","qa engineer"], good:["k6","jest","appium","jmeter","pact","bdd"] },
+  data:     { must:["spark","dbt","airflow","data pipeline","data engineer","etl"], good:["kafka","snowflake","bigquery","flink","databricks","delta lake"] },
+  genai:    { must:["llm","langchain","rag","pytorch","generative ai","genai","fine-tuning"], good:["hugging face","transformers","openai","mlflow","embeddings","vector"] }
+};
+
+var CITIES = ["Bengaluru","Hyderabad","Pune","Chennai","NCR","Delhi","Noida","Gurugram"];
+
+// ── STATE ─────────────────────────────────────────────────
+var currentRole = null;
+var allProfiles = [];
+var filtered    = [];
+var shortlist   = {};
+var activeCity  = "all";
+var ghToken     = localStorage.getItem("ee_gh_token") || "";
+
+// ── BOOT ─────────────────────────────────────────────────
+window.onload = function() {
+  buildRoleGrid();
+  if (ghToken) {
+    document.getElementById("token-input").value = ghToken;
+    document.getElementById("token-status").textContent = "✓ Token ready";
+    document.getElementById("token-status").style.color = "#085041";
+  }
+};
+
+function buildRoleGrid() {
+  var grid = document.getElementById("role-grid");
+  grid.innerHTML = "";
+  RECRUITERS.forEach(function(r) {
+    var role  = ROLES[r.id];
+    var pills = role.must.slice(0,4).map(function(s){ return '<span class="role-pill">'+s+'</span>'; }).join("");
+    var div   = document.createElement("div");
+    div.className = "role-tile";
+    div.onclick   = function(){ openDomain(r.id); };
+    div.innerHTML =
+      '<div class="role-icon" style="background:'+r.color+';color:'+r.tcolor+'"><i class="ti '+r.icon+'"></i></div>'+
+      '<div class="role-label">'+r.label+'</div>'+
+      '<div class="role-owner">'+r.name+'</div>'+
+      '<div class="role-pills">'+pills+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+// ── TOKEN ─────────────────────────────────────────────────
+function saveToken() {
+  var v = document.getElementById("token-input").value.trim();
+  if (!v) { alert("Please paste your GitHub token first — it starts with ghp_"); return; }
+  ghToken = v;
+  localStorage.setItem("ee_gh_token", v);
+  document.getElementById("token-status").textContent = "✓ Token saved!";
+  document.getElementById("token-status").style.color = "#085041";
+}
+
+// ── OPEN DOMAIN ───────────────────────────────────────────
+function openDomain(roleId) {
+  if (!ghToken) { alert("Please save your GitHub token first using the bar at the top."); return; }
+  currentRole = roleId;
+  var rec = RECRUITERS.find(function(r){ return r.id === roleId; });
+  document.getElementById("role-screen").style.display  = "none";
+  document.getElementById("dashboard").style.display    = "block";
+  document.getElementById("user-pill").style.display    = "flex";
+  document.getElementById("user-name-top").textContent  = rec.name;
+  document.getElementById("user-avatar-top").textContent = initials(rec.name);
+  document.getElementById("dash-icon").innerHTML        = '<i class="ti '+rec.icon+'" style="font-size:17px"></i>';
+  document.getElementById("dash-icon").style.background = rec.color;
+  document.getElementById("dash-icon").style.color      = rec.tcolor;
+  document.getElementById("dash-label").textContent     = rec.label;
+  document.getElementById("dash-sub").textContent       = "Recruiter: "+rec.name+" · "+rec.email;
+  document.getElementById("digest-email").textContent   = rec.email;
+  buildCityFilters();
+  runSearch();
+}
+
+function backToRoles() {
+  document.getElementById("role-screen").style.display = "";
+  document.getElementById("dashboard").style.display   = "none";
+  document.getElementById("user-pill").style.display   = "none";
+  currentRole = null;
+}
+
+function buildCityFilters() {
+  var wrap = document.getElementById("city-filter");
+  wrap.innerHTML = "";
+  var all = document.createElement("button");
+  all.className = "city-btn active"; all.textContent = "All cities";
+  all.onclick = function(){ setCity("all", all); };
+  wrap.appendChild(all);
+  ["Bengaluru","Hyderabad","Pune","Chennai","NCR"].forEach(function(c){
+    var btn = document.createElement("button");
+    btn.className = "city-btn"; btn.textContent = c;
+    btn.onclick = function(){ setCity(c, btn); };
+    wrap.appendChild(btn);
+  });
+}
+
+function setCity(city, btn) {
+  activeCity = city;
+  document.querySelectorAll(".city-btn").forEach(function(b){ b.classList.remove("active"); });
+  btn.classList.add("active");
+  applyFilters();
+}
+
+// ── SEARCH ────────────────────────────────────────────────
+async function runSearch() {
+  showLoading("Searching GitHub across India…");
+  allProfiles = [];
+  var role = ROLES[currentRole];
+  var seen = {};
+  var loaded = 0;
+
+  for (var i = 0; i < Math.min(4, role.must.length); i++) {
+    var term = role.must[i];
+    var q    = encodeURIComponent(term + " location:India");
+    var url  = "https://api.github.com/search/users?q=" + q + "+in:bio&per_page=20&sort=followers";
+    try {
+      var res  = await fetch(url, { headers: { "Authorization": "token " + ghToken, "Accept": "application/vnd.github.v3+json" } });
+      var data = await res.json();
+      var items = data.items || [];
+      showLoading("Found " + items.length + " candidates for '" + term + "'… checking profiles");
+      var fresh = items.filter(function(u){ return !seen[u.login]; }).slice(0, 10);
+      fresh.forEach(function(u){ seen[u.login] = true; });
+      var profiles = await Promise.all(fresh.map(fetchProfile));
+      profiles.forEach(function(p){
+        if (!p) return;
+        var sc = scoreProfile(p, role);
+        if (sc > 0) { allProfiles.push(Object.assign({}, p, {_score: sc})); loaded++; }
+      });
+      if (loaded > 0) { applyFilters(); }
+    } catch(e) { console.error("Search error:", e); }
+  }
+
+  if (allProfiles.length === 0) {
+    showEmpty("No profiles found. Try clicking Refresh or check your token.");
+  } else {
+    applyFilters();
+  }
+}
+
+async function fetchProfile(u) {
+  try {
+    var res = await fetch("https://api.github.com/users/" + u.login, {
+      headers: { "Authorization": "token " + ghToken, "Accept": "application/vnd.github.v3+json" }
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+// ── SCORE ─────────────────────────────────────────────────
+function scoreProfile(p, role) {
+  if (p.created_at && new Date(p.created_at).getFullYear() > 2018) return 0;
+  var text = [p.bio, p.name, p.login, p.company, p.blog].filter(Boolean).join(" ").toLowerCase();
+  if (!role.must.some(function(k){ return text.indexOf(k) >= 0; })) return 0;
+  var score = 30;
+  score += Math.min(20, p.public_repos || 0);
+  score += Math.min(15, Math.floor((p.followers || 0) / 5));
+  role.good.forEach(function(k){ if (text.indexOf(k) >= 0) score += 4; });
+  if (p.updated_at && daysSince(p.updated_at) <= 30) score += 10;
+  if (p.blog)  score += 5;
+  if (p.email) score += 5;
+  var yr = p.created_at ? new Date(p.created_at).getFullYear() : 2020;
+  if (yr <= 2013) score += 10; else if (yr <= 2016) score += 6; else if (yr <= 2019) score += 3;
+  return Math.min(100, score);
+}
+
+function daysSince(iso) { return Math.floor((Date.now() - new Date(iso)) / 86400000); }
+function initials(n) { return n.split(" ").map(function(w){ return w[0]; }).join("").toUpperCase().slice(0,2); }
+function countStars(p) { return Math.round((p.followers||0)*0.5 + (p.public_repos||0)*1.5); }
+
+// ── FILTERS & RENDER ──────────────────────────────────────
+function applyFilters() {
+  var q = (document.getElementById("search-input").value || "").toLowerCase();
+  filtered = allProfiles.filter(function(p){
+    var text = [p.name, p.login, p.bio, p.location].filter(Boolean).join(" ").toLowerCase();
+    var mq   = !q || text.indexOf(q) >= 0;
+    var mc   = activeCity === "all" || (p.location||"").toLowerCase().indexOf(activeCity.toLowerCase()) >= 0;
+    return mq && mc;
+  });
+  sortAndRender();
+}
+
+function sortAndRender() {
+  var by = document.getElementById("sort-select").value;
+  filtered.sort(function(a,b){
+    if (by==="stars")     return countStars(b)-countStars(a);
+    if (by==="active")    return new Date(b.updated_at)-new Date(a.updated_at);
+    if (by==="followers") return (b.followers||0)-(a.followers||0);
+    return b._score-a._score;
+  });
+  renderCards();
+  updateStats();
+}
+
+function renderCards() {
+  var con  = document.getElementById("results-container");
+  if (!filtered.length) { showEmpty("No profiles match your filters."); return; }
+  var role = ROLES[currentRole];
+  var rec  = RECRUITERS.find(function(r){ return r.id===currentRole; });
+  var html = '<div class="results-grid">';
+  filtered.forEach(function(p){
+    var days   = p.updated_at ? daysSince(p.updated_at) : 999;
+    var ac     = days<=30?"active-recent":days<=90?"active-mid":"active-old";
+    var al     = days<=30?"Active "+days+"d ago":days<=90?"Active "+days+"d ago":"Inactive 90d+";
+    var text   = [p.bio,p.login,p.name].filter(Boolean).join(" ").toLowerCase();
+    var mTags  = role.must.filter(function(k){ return text.indexOf(k)>=0; }).slice(0,3).map(function(k){ return '<span class="skill-must">'+k+'</span>'; }).join("");
+    var gTags  = role.good.filter(function(k){ return text.indexOf(k)>=0; }).slice(0,3).map(function(k){ return '<span class="skill-good">'+k+'</span>'; }).join("");
+    var stars  = countStars(p);
+    var sc     = Math.round(p._score);
+    var yr     = p.created_at ? new Date(p.created_at).getFullYear() : "?";
+    var bio    = p.bio ? p.bio.slice(0,100)+(p.bio.length>100?"…":"") : "No bio available";
+    html +=
+      '<div class="dev-card">'+
+        '<div class="dev-top">'+
+          '<img class="dev-avatar" src="'+p.avatar_url+'" onerror="this.style.display=\'none\'">'+
+          '<div>'+
+            '<div class="dev-name">'+(p.name||p.login)+'</div>'+
+            '<div class="dev-handle">@'+p.login+'</div>'+
+            '<div class="dev-activity '+ac+'">'+al+'</div>'+
+          '</div>'+
+        '</div>'+
+        (p.location?'<div class="dev-loc"><i class="ti ti-map-pin" style="font-size:11px"></i>'+p.location+'</div>':'')+
+        '<div class="dev-bio">'+bio+'</div>'+
+        '<div class="dev-skills">'+mTags+gTags+'</div>'+
+        '<div class="dev-stats">'+
+          '<span class="dev-stat"><i class="ti ti-book"></i>'+(p.public_repos||0)+' repos</span>'+
+          '<span class="dev-stat"><i class="ti ti-users"></i>'+(p.followers||0)+' followers</span>'+
+          '<span class="dev-stat"><i class="ti ti-calendar"></i>Since '+yr+'</span>'+
+        '</div>'+
+        '<div class="score-row">'+
+          '<span class="score-lbl">Score</span>'+
+          '<div class="score-bar-bg"><div class="score-bar-fill" style="width:'+sc+'%"></div></div>'+
+          '<span class="score-num">'+sc+'</span>'+
+        '</div>'+
+        '<div class="dev-actions">'+
+          '<a class="btn-github" href="https://github.com/'+p.login+'" target="_blank"><i class="ti ti-brand-github"></i> View profile</a>'+
+          '<button class="btn-save" onclick="saveProfile(\''+p.login+'\')"><i class="ti ti-bookmark"></i> Save</button>'+
+        '</div>'+
+      '</div>';
+  });
+  html += '</div>';
+  con.innerHTML = html;
+}
+
+function updateStats() {
+  document.getElementById("s-total").textContent  = filtered.length;
+  document.getElementById("s-active").textContent = filtered.filter(function(p){ return daysSince(p.updated_at)<=30; }).length;
+  document.getElementById("s-top").textContent    = filtered.filter(function(p){ return p._score>=70; }).length;
+  var cs = new Set(filtered.map(function(p){ return (p.location||"").split(",")[0].trim(); }).filter(Boolean));
+  document.getElementById("s-cities").textContent = cs.size;
+}
+
+function showLoading(msg) {
+  document.getElementById("results-container").innerHTML =
+    '<div class="loading-wrap"><div class="loading-spinner"></div><p style="font-size:14px;color:#888">'+msg+'</p></div>';
+}
+function showEmpty(msg) {
+  document.getElementById("results-container").innerHTML =
+    '<div class="empty-state"><i class="ti ti-mood-empty"></i><p>'+msg+'</p></div>';
+}
+
+function saveProfile(login) { console.log("Saved:", login); }
+
+// ── EMAIL DIGEST ──────────────────────────────────────────
+function buildDigestBody() {
+  var rec  = RECRUITERS.find(function(r){ return r.id===currentRole; });
+  var top  = filtered.slice(0,10);
+  var subj = "TalentRadar Digest — Top " + rec.label + " Contributors";
+  var body = "TalentRadar Digest — " + rec.label + "\n";
+  body += "Equal Experts India | " + new Date().toDateString() + "\n\n";
+  top.forEach(function(p,i){
+    body += (i+1)+". "+(p.name||p.login)+" (@"+p.login+")\n";
+    body += "   Score: "+Math.round(p._score)+"/100\n";
+    if (p.location) body += "   Location: "+p.location+"\n";
+    if (p.bio) body += "   Bio: "+p.bio.slice(0,120)+"\n";
+    body += "   GitHub: https://github.com/"+p.login+"\n";
+    if (p.blog) body += "   Website: "+p.blog+"\n\n";
+  });
+  return { subj: subj, body: body, email: rec.email };
+}
+
+function sendDigest() {
+  var d = buildDigestBody();
+  window.location.href = "mailto:"+d.email+"?subject="+encodeURIComponent(d.subj)+"&body="+encodeURIComponent(d.body);
+}
+
+function previewDigest() {
+  var d   = buildDigestBody();
+  var win = window.open("","_blank");
+  win.document.write("<pre style='font-family:monospace;font-size:13px;padding:20px;max-width:680px;white-space:pre-wrap'><b>To:</b> "+d.email+"\n<b>Subject:</b> "+d.subj+"\n\n"+d.body+"</pre>");
+}
+</script>
+</body>
+</html>
